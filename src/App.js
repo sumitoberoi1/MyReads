@@ -19,6 +19,22 @@ class BooksApp extends React.Component {
   showSearchPage = () => {
       this.setState({ showSearchPage: false })
   }
+  changeShelf = (book,shelf) => {
+    BooksAPI.update(book,shelf).then((response) => {
+        console.log(`Response ${response}`)
+        this.getAllBooks()
+    })
+  }
+  getAllBooks = () => {
+      BooksAPI.getAll().then((books)=>{
+          console.log(books)
+          this.setState({
+              books:books
+          })
+      })
+  }
+
+
   getBooksAccordingToCategory = (books,category) => {
       console.log(`Books ${books}`)
       for (var i in books) {
@@ -30,13 +46,9 @@ class BooksApp extends React.Component {
       return filteredBookArray
   }
   componentDidMount() {
-    BooksAPI.getAll().then((books)=>{
-      console.log(books)
-      this.setState({
-          books:books
-      })
-    })
+    this.getAllBooks()
   }
+
   render() {
     let {books}= this.state
     return (
@@ -54,9 +66,15 @@ class BooksApp extends React.Component {
             <WelcomeHeader/>
             <div className="list-books-content">
               <div>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')} bookShelfTitle='Currently Reading'/>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')} bookShelfTitle = 'Want To Read'/>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'read')} bookShelfTitle = 'Read'/>
+                <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')}
+                           bookShelfTitle='Currently Reading'
+                            changeShelf = {this.changeShelf}/>
+                <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')}
+                           bookShelfTitle = 'Want To Read'
+                           changeShelf = {this.changeShelf} />
+                <BookShelf books={this.getBooksAccordingToCategory(books,'read')}
+                           bookShelfTitle = 'Read'
+                           changeShelf = {this.changeShelf}/>
               </div>
             </div>
             <div className="open-search">
