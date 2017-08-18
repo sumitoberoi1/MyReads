@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import BookItem from './BookItem'
 
 const BookShelf = (props) => {
     const {books,bookShelfTitle} = props
@@ -10,7 +11,7 @@ const BookShelf = (props) => {
                 <ol className="books-grid">
                     {books.map((book) => (
                         <li key={book.id} className='contact-list-item'>
-
+                            <BookItem book={book}/>
                         </li>
                     ))}
                 </ol>
