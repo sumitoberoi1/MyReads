@@ -1,8 +1,12 @@
-import React, {Component} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import BookItem from './BookItem'
 
 const BookShelf = (props) => {
-    const {books,bookShelfTitle} = props
+    const {books,bookShelfTitle,changeShelf} = props
+    const handleShelfChange = (book,newShelf) => {
+        changeShelf(book,newShelf)
+    }
     return(
         <div className="bookshelf">
             <h2 className="bookshelf-title">{bookShelfTitle}</h2>
@@ -10,7 +14,7 @@ const BookShelf = (props) => {
                 <ol className="books-grid">
                     {books.map((book) => (
                         <li key={book.id} className='contact-list-item'>
-
+                            <BookItem book={book} handleShelfChange={handleShelfChange}/>
                         </li>
                     ))}
                 </ol>
@@ -20,7 +24,8 @@ const BookShelf = (props) => {
 }
 BookShelf.PropTypes = {
     books:PropTypes.array.isRequired,
-    bookShelfTitle:PropTypes.string.isRequired
+    bookShelfTitle:PropTypes.string.isRequired,
+    changeShelf:PropTypes.func.isRequired
 }
 
 export default BookShelf

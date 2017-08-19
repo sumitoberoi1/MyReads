@@ -13,12 +13,34 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false,
-      books:[]
+    showSearchPage: true,
+      books:[],
+      searchedBooks:[]
   }
   showSearchPage = () => {
       this.setState({ showSearchPage: false })
   }
+  changeShelf = (book,shelf) => {
+    BooksAPI.update(book,shelf).then((response) => {
+        this.getAllBooks()
+    })
+  }
+  getAllBooks = () => {
+      BooksAPI.getAll().then((books)=>{
+          console.log(books)
+          this.setState({
+              books:books
+          })
+      })
+  }
+
+  updateSearchedBooks = (searchedBooks) => {
+    this.setState({
+        searchedBooks:searchedBooks
+    })
+  }
+
+
   getBooksAccordingToCategory = (books,category) => {
       console.log(`Books ${books}`)
       for (var i in books) {
@@ -30,23 +52,26 @@ class BooksApp extends React.Component {
       return filteredBookArray
   }
   componentDidMount() {
-    BooksAPI.getAll().then((books)=>{
-      console.log(books)
-      this.setState({
-          books:books
-      })
-    })
+    this.getAllBooks()
   }
+
   render() {
     let {books}= this.state
+      let {searchedBooks} = this.state
     return (
 
       <div className="app">
         {this.state.showSearchPage ? (
           <div className="search-books">
-            <SearchBar showSearchPage = {this.showSearchPage}/>
+            <SearchBar showSearchPage = {this.showSearchPage} />
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              <ol className="books-grid">
+                  {searchedBooks.map((book) => (
+                      <li key={book.id} className='contact-list-item'>
+                        <p>book.title</p>
+                      </li>
+                  ))}
+              </ol>
             </div>
           </div>
         ) : (
@@ -54,9 +79,15 @@ class BooksApp extends React.Component {
             <WelcomeHeader/>
             <div className="list-books-content">
               <div>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')} bookShelfTitle='Currently Reading'/>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')} bookShelfTitle = 'Want To Read'/>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'read')} bookShelfTitle = 'Read'/>
+                <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')}
+                           bookShelfTitle='Currently Reading'
+                            changeShelf = {this.changeShelf}/>
+                <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')}
+                           bookShelfTitle = 'Want To Read'
+                           changeShelf = {this.changeShelf} />
+                <BookShelf books={this.getBooksAccordingToCategory(books,'read')}
+                           bookShelfTitle = 'Read'
+                           changeShelf = {this.changeShelf}/>
               </div>
             </div>
             <div className="open-search">
