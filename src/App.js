@@ -1,4 +1,5 @@
 import React from 'react'
+import { Route,Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import WelcomeHeader from './WelcomeHeader'
@@ -13,12 +14,8 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: true,
       books:[],
       searchedBooks:[]
-  }
-  showSearchPage = () => {
-      this.setState({ showSearchPage: false })
   }
   changeShelf = (book,shelf) => {
     BooksAPI.update(book,shelf).then((response) => {
@@ -59,42 +56,42 @@ class BooksApp extends React.Component {
     let {books}= this.state
       let {searchedBooks} = this.state
     return (
-
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <SearchBar showSearchPage = {this.showSearchPage} />
-            <div className="search-books-results">
-              <ol className="books-grid">
-                  {searchedBooks.map((book) => (
-                      <li key={book.id} className='contact-list-item'>
-                        <p>book.title</p>
-                      </li>
-                  ))}
-              </ol>
-            </div>
-          </div>
-        ) : (
-          <div className="list-books">
-            <WelcomeHeader/>
-            <div className="list-books-content">
-              <div>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')}
-                           bookShelfTitle='Currently Reading'
-                            changeShelf = {this.changeShelf}/>
-                <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')}
-                           bookShelfTitle = 'Want To Read'
-                           changeShelf = {this.changeShelf} />
-                <BookShelf books={this.getBooksAccordingToCategory(books,'read')}
-                           bookShelfTitle = 'Read'
-                           changeShelf = {this.changeShelf}/>
+          <Route path = "/search" render = {() =>
+              (<div className="search-books">
+              <SearchBar />
+              <div className="search-books-results">
+                  <ol className="books-grid">
+                      {searchedBooks.map((book) => (
+                          <li key={book.id} className='contact-list-item'>
+                              <p>book.title</p>
+                          </li>
+                      ))}
+                  </ol>
               </div>
-            </div>
-            <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-            </div>
-          </div>
-        )}
+              </div>)}
+          />
+          <Route exact path = "/" render = {() => (
+              <div className="list-books">
+                  <WelcomeHeader/>
+                  <div className="list-books-content">
+                      <div>
+                          <BookShelf books={this.getBooksAccordingToCategory(books,'currentlyReading')}
+                                     bookShelfTitle='Currently Reading'
+                                     changeShelf = {this.changeShelf}/>
+                          <BookShelf books={this.getBooksAccordingToCategory(books,'wantToRead')}
+                                     bookShelfTitle = 'Want To Read'
+                                     changeShelf = {this.changeShelf} />
+                          <BookShelf books={this.getBooksAccordingToCategory(books,'read')}
+                                     bookShelfTitle = 'Read'
+                                     changeShelf = {this.changeShelf}/>
+                      </div>
+                  </div>
+                  <div className="open-search">
+                      <Link to="/search"> Add a book </Link>
+                  </div>
+              </div>
+          )} />
       </div>
     )
   }

@@ -16,15 +16,13 @@ class SearchBar extends Component {
     searchBooks = (query) => {
         BooksAPI.search()
     }
-    static propTypes = {
-        showSearchPage:PropTypes.func.isRequired
-    }
+
     render() {
-        const {showSearchPage} = this.props
+
         let {query} = this.state
         return (
             <div className="search-books-bar">
-            <a className="close-search" onClick={() => showSearchPage()}>Close</a>
+            <a className="close-search">Close</a>
             <div className="search-books-input-wrapper">
                 {/*
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
