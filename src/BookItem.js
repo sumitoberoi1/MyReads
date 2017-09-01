@@ -6,12 +6,13 @@ const BookItem = (props) => {
     const handleOnChange = (event) => {
         handleShelfChange(book,event.target.value)
     }
+    console.log(`Book ${book.authors}`)
     return (
         <div className="book">
             <div className="book-top">
                 <div className="book-cover" style={{ width: 128, height: 193, backgroundImage:`url(${book.imageLinks.thumbnail})` }}></div>
                 <div className="book-shelf-changer">
-                    <select value={book.shelf} onChange={handleOnChange}>
+                    <select value={(book.shelf) ? book.shelf:"none"} onChange={handleOnChange}>
                         <option value="none" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>
@@ -21,7 +22,7 @@ const BookItem = (props) => {
                 </div>
             </div>
             <div className="book-title">{book.title}</div>
-            <div className="book-authors">{book.authors.join(',')}</div>
+            <div className="book-authors">{(book.authors) && (book.authors.join(','))}</div>
         </div>
     )
 }
