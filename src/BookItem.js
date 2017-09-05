@@ -4,9 +4,8 @@ import PropTypes from 'prop-types'
 const BookItem = (props) => {
     const {book,handleShelfChange} = props
     const handleOnChange = (event) => {
-        handleShelfChange(book,event.target.value)
+        handleShelfChange(book, event.target.value)
     }
-    console.log(`Book ${book.authors}`)
     return (
         <div className="book">
             <div className="book-top">

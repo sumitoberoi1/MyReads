@@ -11,6 +11,9 @@ class SearchResult extends Component {
         }
     }
     updateQuery = (query) => {
+        if (query) {
+            this.props.updateSearchBooks([])
+        }
         this.setState({
             query:query.trim()
         })
@@ -32,20 +35,24 @@ class SearchResult extends Component {
     }
     searchBooks = (query) => {
         let { shelfedBooks } = this.props
-        BooksAPI.search(query).then((books) => {
-            if (books) {
-                console.log(`books ${books.length}`)
-                books.map((book) => {
-                    shelfedBooks.forEach((shelfedBook) => {
-                        if (book.id === shelfedBook.id) {
-                            book.shelf = shelfedBook.shelf
-                        }
+        if (query.length > 0) {
+            BooksAPI.search(query).then((books) => {
+                if (books) {
+                    books.map((book) => {
+                        shelfedBooks.forEach((shelfedBook) => {
+                            if (book.id === shelfedBook.id) {
+                                book.shelf = shelfedBook.shelf
+                            }
+                        })
+                        return book
                     })
-                    return book
-                })
-                this.props.updateSearchBooks(books)
-            }
-        })
+                    this.props.updateSearchBooks(books)
+                }
+            })
+        } else {
+            console.log(`Empty array`)
+            this.props.updateSearchBooks([])
+        }
     }
     render() {
         let {query} = this.state

@@ -19,7 +19,20 @@ class BooksApp extends React.Component {
     }
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
-            this.getAllBooks()
+            let modifiedBookArray = this.state.shelfedBooks.map((aBook) => {
+                console.log(`Book shelf ${aBook.shelf}`)
+                console.log(`here second`)
+                if (book.id === aBook.id) {
+                    aBook.shelf = shelf
+                }
+                return aBook
+            })
+            modifiedBookArray.forEach((book) => {
+                console.log(`Books got ${book}`)
+            })
+            this.setState({
+                shelfedBooks:modifiedBookArray
+            })
         })
     }
 
@@ -33,9 +46,7 @@ class BooksApp extends React.Component {
     }
 
     updateSearchedBooks = (searchedBooks) => {
-        this.setState({
-            searchedBooks: searchedBooks
-        })
+        this.setState({ searchedBooks })
     }
 
     getBooksAccordingToCategory = (books,category) => {
