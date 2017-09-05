@@ -22,13 +22,10 @@ class SearchResult extends Component {
         shelfedBooks:PropTypes.array.isRequired,
         searchBooks:PropTypes.array.isRequired,
         updateSearchBooks:PropTypes.func.isRequired,
-        push:PropTypes.func.isRequired,
-        getAllBooks:PropTypes.func.isRequired
+        push:PropTypes.func.isRequired
     }
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
-            this.searchBooks(this.state.query)
-            this.props.getAllBooks()
             this.props.push('/')
 
         })

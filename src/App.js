@@ -49,12 +49,10 @@ class BooksApp extends React.Component {
         this.setState({ searchedBooks })
     }
 
-    getBooksAccordingToCategory = (books,category) => {
-        let filteredBookArray = books.filter((book) => {
-            return book.shelf == category
-        })
-        return filteredBookArray
+    getBooksAccordingToCategory = (books, category) => {
+        return books.filter(book => book.shelf === category);
     }
+
     componentDidMount() {
         this.getAllBooks()
     }
@@ -90,8 +88,7 @@ class BooksApp extends React.Component {
                         <SearchResult shelfedBooks={shelfedBooks}
                                       searchBooks={searchedBooks}
                                       updateSearchBooks={this.updateSearchedBooks}
-                                        push = {history.push}
-                                        getAllBooks = {this.getAllBooks}/>
+                                        push = {history.push} />
                     )}
                 />
             </div>
