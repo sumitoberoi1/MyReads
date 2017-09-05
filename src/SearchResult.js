@@ -11,6 +11,7 @@ class SearchResult extends Component {
         }
     }
     updateQuery = (query) => {
+
         this.setState({
             query:query.trim()
         })
@@ -19,33 +20,31 @@ class SearchResult extends Component {
         shelfedBooks:PropTypes.array.isRequired,
         searchBooks:PropTypes.array.isRequired,
         updateSearchBooks:PropTypes.func.isRequired,
-        push:PropTypes.func.isRequired,
-        getAllBooks:PropTypes.func.isRequired
+        changeShelf:PropTypes.func.isRequired,
+        push:PropTypes.func.isRequired
     }
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
-            this.searchBooks(this.state.query)
-            this.props.getAllBooks()
             this.props.push('/')
-
+            this.props.changeShelf(book,shelf,true)
         })
     }
     searchBooks = (query) => {
-        let { shelfedBooks } = this.props
-        BooksAPI.search(query).then((books) => {
-            if (books) {
-                console.log(`books ${books.length}`)
-                books.map((book) => {
-                    shelfedBooks.forEach((shelfedBook) => {
-                        if (book.id === shelfedBook.id) {
-                            book.shelf = shelfedBook.shelf
-                        }
-                    })
-                    return book
+        const { shelfedBooks } = this.props
+        if (query) {
+            let delayTimer;
+            clearTimeout(delayTimer)
+            delayTimer = setTimeout(()=> BooksAPI.search(query).then((books) => {
+                const searchBooks = books.map(book => {
+                    const existingBook = shelfedBooks.find(v => v.id === book.id);
+                    book.shelf = !!existingBook ? existingBook.shelf : 'none';
+                    return book;
                 })
-                this.props.updateSearchBooks(books)
-            }
-        })
+                this.props.updateSearchBooks(searchBooks,query)
+            }),1000)
+        } else  {
+            this.props.updateSearchBooks([],query)
+        }
     }
     render() {
         let {query} = this.state
@@ -56,8 +55,9 @@ class SearchResult extends Component {
                     <Link className = "close-search" to="/">Close</Link>
                     <div className="search-books-input-wrapper">
                         <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => {
+                            console.log(`Query ${event.target.value}`)
                             this.updateQuery(event.target.value)
-                            {(query) && this.searchBooks(query)}
+                            this.searchBooks(event.target.value)
                         }}/>
                     </div>
                 </div>
