@@ -17,13 +17,31 @@ class BooksApp extends React.Component {
         shelfedBooks:[],
         searchedBooks:[]
     }
-    changeShelf = (book,shelf) => {
+    changeShelf = (book,shelf,isSearch) => {
+        console.log(`Shelfed Books ${this.state.shelfedBooks}`)
         BooksAPI.update(book, shelf).then(() => {
-            this.setState({
-                shelfedBooks:this.state.shelfedBooks.map(aBook => (aBook.id === book.id) && (aBook.shelf = shelf))
-            })
+            {
+                isSearch ? this.setState((state)=>({
+                        searchedBooks:state.searchedBooks.map((aBook) => {
+                            if (aBook.id === book.id) {
+                              aBook.shelf = shelf
+                              state.shelfedBooks.push(aBook)
+                            }
+                            return aBook
+                        })
+                    }))
+                 : this.setState((state)=>({
+                    shelfedBooks: state.shelfedBooks.map((aBook) => {
+                        (aBook.id === book.id) && (aBook.shelf = shelf)
+                        return aBook
+                    })
+                }))
+
+            }
         })
+        console.log(`Shelfed Books ${this.state.shelfedBooks.length}`)
     }
+
 
     getAllBooks = () => {
         BooksAPI.getAll().then((books) => {
@@ -34,8 +52,17 @@ class BooksApp extends React.Component {
         })
     }
 
-    updateSearchedBooks = (searchedBooks) => {
-        this.setState({ searchedBooks })
+    updateSearchedBooks = (searchedBooks,query) => {
+        console.log("Here in method")
+        if (query) {
+            if (searchedBooks.length > 0) {
+                console.log("Found")
+                this.setState({searchedBooks})
+            }
+        } else {
+            this.setState({searchedBooks: []})
+        }
+
     }
 
     getBooksAccordingToCategory = (books, category) => {
@@ -77,7 +104,8 @@ class BooksApp extends React.Component {
                         <SearchResult shelfedBooks={shelfedBooks}
                                       searchBooks={searchedBooks}
                                       updateSearchBooks={this.updateSearchedBooks}
-                                        push = {history.push} />
+                                      changeShelf = {this.changeShelf}
+                                      push = {history.push} />
                     )}
                 />
             </div>

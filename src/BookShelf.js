@@ -5,7 +5,7 @@ import BookItem from './BookItem'
 const BookShelf = (props) => {
     const {books,bookShelfTitle,changeShelf} = props
     const handleShelfChange = (book,newShelf) => {
-        changeShelf(book,newShelf)
+        changeShelf(book,newShelf,false)
     }
     return(
         <div className="bookshelf">
