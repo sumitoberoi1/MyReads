@@ -27,13 +27,12 @@ class SearchResult extends Component {
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
             this.props.push('/')
-
         })
     }
     searchBooks = (query) => {
         const { shelfedBooks } = this.props
         if (query.length > 0) {
-            const searchBooks = books.map(book => {
+            const searchBooks = searchBooks.map(book => {
                 const existingBook = shelfedBooks.find(v => v.id === book.id);
                 book.shelf = !!existingBook ? existingBook.shelf : 'none';
                 return book;
@@ -54,6 +53,7 @@ class SearchResult extends Component {
                     <div className="search-books-input-wrapper">
                         <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => {
                             this.updateQuery(event.target.value)
+                            console.log(`Query ${event.target.value}`)
                             {(query) && this.searchBooks(query)}
                         }}/>
                     </div>
