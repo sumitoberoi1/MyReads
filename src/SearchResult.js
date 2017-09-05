@@ -31,21 +31,14 @@ class SearchResult extends Component {
         })
     }
     searchBooks = (query) => {
-        let { shelfedBooks } = this.props
+        const { shelfedBooks } = this.props
         if (query.length > 0) {
-            BooksAPI.search(query).then((books) => {
-                if (books) {
-                    books.map((book) => {
-                        shelfedBooks.forEach((shelfedBook) => {
-                            if (book.id === shelfedBook.id) {
-                                book.shelf = shelfedBook.shelf
-                            }
-                        })
-                        return book
-                    })
-                    this.props.updateSearchBooks(books)
-                }
+            const searchBooks = books.map(book => {
+                const existingBook = shelfedBooks.find(v => v.id === book.id);
+                book.shelf = !!existingBook ? existingBook.shelf : 'none';
+                return book;
             })
+            this.props.updateSearchBooks(searchBooks)
         } else {
             console.log(`Empty array`)
             this.props.updateSearchBooks([])

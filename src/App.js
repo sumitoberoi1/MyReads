@@ -19,19 +19,8 @@ class BooksApp extends React.Component {
     }
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
-            let modifiedBookArray = this.state.shelfedBooks.map((aBook) => {
-                console.log(`Book shelf ${aBook.shelf}`)
-                console.log(`here second`)
-                if (book.id === aBook.id) {
-                    aBook.shelf = shelf
-                }
-                return aBook
-            })
-            modifiedBookArray.forEach((book) => {
-                console.log(`Books got ${book}`)
-            })
             this.setState({
-                shelfedBooks:modifiedBookArray
+                shelfedBooks:this.state.shelfedBooks.map(aBook => (aBook.id === book.id) && (aBook.shelf = shelf))
             })
         })
     }
