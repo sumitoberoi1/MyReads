@@ -18,7 +18,6 @@ class BooksApp extends React.Component {
         searchedBooks:[]
     }
     changeShelf = (book,shelf,isSearch) => {
-        console.log(`Shelfed Books ${this.state.shelfedBooks}`)
         BooksAPI.update(book, shelf).then(() => {
             {
                 isSearch ? this.setState((state)=>({
@@ -39,13 +38,12 @@ class BooksApp extends React.Component {
 
             }
         })
-        console.log(`Shelfed Books ${this.state.shelfedBooks.length}`)
+
     }
 
 
     getAllBooks = () => {
         BooksAPI.getAll().then((books) => {
-            console.log(books)
             this.setState({
                 shelfedBooks: books
             })
@@ -53,10 +51,9 @@ class BooksApp extends React.Component {
     }
 
     updateSearchedBooks = (searchedBooks,query) => {
-        console.log("Here in method")
         if (query) {
             if (searchedBooks.length > 0) {
-                console.log("Found")
+
                 this.setState({searchedBooks})
             }
         } else {
@@ -99,13 +96,12 @@ class BooksApp extends React.Component {
                         </div>
                     </div>
                 )} />
-                <Route path = "/search" render = {({ history }) =>
+                <Route path = "/search" render = {() =>
                     (
                         <SearchResult shelfedBooks={shelfedBooks}
                                       searchBooks={searchedBooks}
                                       updateSearchBooks={this.updateSearchedBooks}
-                                      changeShelf = {this.changeShelf}
-                                      push = {history.push} />
+                                      changeShelf = {this.changeShelf}/>
                     )}
                 />
             </div>

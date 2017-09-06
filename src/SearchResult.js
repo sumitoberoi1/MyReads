@@ -20,12 +20,10 @@ class SearchResult extends Component {
         shelfedBooks:PropTypes.array.isRequired,
         searchBooks:PropTypes.array.isRequired,
         updateSearchBooks:PropTypes.func.isRequired,
-        changeShelf:PropTypes.func.isRequired,
-        push:PropTypes.func.isRequired
+        changeShelf:PropTypes.func.isRequired
     }
     changeShelf = (book,shelf) => {
         BooksAPI.update(book, shelf).then(() => {
-            this.props.push('/')
             this.props.changeShelf(book,shelf,true)
         })
     }
@@ -54,8 +52,8 @@ class SearchResult extends Component {
                 <div className="search-books-bar">
                     <Link className = "close-search" to="/">Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => {
-                            console.log(`Query ${event.target.value}`)
+                        <input type="text" placeholder="Search by title or author"
+                               value={query} onChange={(event) => {
                             this.updateQuery(event.target.value)
                             this.searchBooks(event.target.value)
                         }}/>
